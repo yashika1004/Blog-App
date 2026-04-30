@@ -77,7 +77,7 @@ export const login = async (req, res) => {
             });
         }
 
-        let user = await User.findOne({ email });
+        const user = await User.findOne({ email });
 
         if (!user) {
             return res.status(400).json({
@@ -91,13 +91,14 @@ export const login = async (req, res) => {
         if (!isPasswordValid) {
             return res.status(400).json({
                 success: false,
-                message: "Invalid Credentials"
+                message: "Invalid credentials"
             });
         }
 
+        // 🔥 IMPORTANT FIX (fallback secret)
         const token = jwt.sign(
             { userId: user._id },
-            process.env.JWT_SECRET,
+            process.env.JWT_SECRET || "mysecretkey",
             { expiresIn: "1d" }
         );
 
@@ -115,7 +116,7 @@ export const login = async (req, res) => {
             });
 
     } catch (error) {
-        console.log(error);
+        console.log("LOGIN ERROR:", error); // 🔥 DEBUG LOG
         return res.status(500).json({
             success: false,
             message: "Failed to Login"
