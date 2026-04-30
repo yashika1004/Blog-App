@@ -1,15 +1,15 @@
 import React, { useState } from 'react'
 import { Button } from './ui/button'
 import { Link, NavLink, useNavigate } from 'react-router-dom'
-import { Input } from './ui/input'
 import Logo from "../assets/logo.png"
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar'
 import { useDispatch, useSelector } from 'react-redux'
 import { toast } from 'sonner'
-import api from "@/utils/api"   // ✅ FIXED
+import api from "@/utils/api"
 import { setUser } from '@/redux/authSlice'
 import userLogo from "../assets/user.jpg"
 import { HiMenuAlt1, HiMenuAlt3 } from "react-icons/hi";
+
 import {
     LogOut,
     User,
@@ -36,13 +36,12 @@ const Navbar = () => {
     const { user } = useSelector(store => store.auth)
     const { theme } = useSelector(store => store.theme)
 
-    const [searchTerm, setSearchTerm] = useState('')
     const [openNav, setOpenNav] = useState(false)
 
     const navigate = useNavigate()
     const dispatch = useDispatch()
 
-    // ✅ LOGOUT FIX
+    // 🔥 LOGOUT
     const logoutHandler = async () => {
         try {
             const res = await api.get("/api/v1/user/logout")
@@ -59,14 +58,6 @@ const Navbar = () => {
         }
     }
 
-    const handleSearch = (e) => {
-        e.preventDefault()
-        if (searchTerm.trim()) {
-            navigate(`/search?q=${encodeURIComponent(searchTerm)}`)
-            setSearchTerm('')
-        }
-    }
-
     return (
         <div className='py-2 fixed w-full border-b bg-white dark:bg-gray-800 z-50'>
 
@@ -75,7 +66,7 @@ const Navbar = () => {
                 {/* LOGO */}
                 <Link to="/">
                     <div className='flex gap-2 items-center'>
-                        <img src={Logo} className='w-8 h-8' />
+                        <img src={Logo} className='w-8 h-8' alt="logo" />
                         <h1 className='text-3xl font-bold'>Blogify</h1>
                     </div>
                 </Link>
@@ -83,13 +74,17 @@ const Navbar = () => {
                 {/* NAV */}
                 <nav className='flex items-center gap-4'>
 
+                    {/* MAIN LINKS */}
                     <NavLink to="/">Home</NavLink>
                     <NavLink to="/blogs">Blogs</NavLink>
+                    <NavLink to="/about">About</NavLink> {/* ✅ FIXED */}
 
+                    {/* THEME */}
                     <Button onClick={() => dispatch(toggleTheme())}>
                         {theme === 'light' ? <FaMoon /> : <FaSun />}
                     </Button>
 
+                    {/* USER SECTION */}
                     {
                         user ? (
                             <div className='flex items-center gap-3'>
@@ -148,6 +143,7 @@ const Navbar = () => {
                         )
                     }
 
+                    {/* MOBILE MENU ICON */}
                     {
                         openNav
                             ? <HiMenuAlt3 onClick={() => setOpenNav(false)} />
@@ -157,6 +153,7 @@ const Navbar = () => {
                 </nav>
             </div>
 
+            {/* MOBILE MENU */}
             <ResponsiveMenu
                 openNav={openNav}
                 setOpenNav={setOpenNav}
