@@ -22,6 +22,7 @@ import { Loader2 } from 'lucide-react'
 import { toast } from 'sonner'
 import { setUser } from '@/redux/authSlice'
 import TotalProperty from '@/components/TotalProperty'
+import api from "@/utils/api"   // ✅ FIXED
 
 const Profile = () => {
     const dispatch = useDispatch()
@@ -78,14 +79,13 @@ const Profile = () => {
 
         try {
             setLoading(true)
-            const res = await axios.put(
-  `https://blog-backend-6s9k.onrender.com/api/v1/user/profile/update`,
+            const res = await api.put(
+  "/api/v1/user/profile/update",
   formData,
   {
     headers: {
       "Content-Type": "multipart/form-data"
-    },
-    withCredentials: true,
+    }
   }
 );
             if (res.data.success) {

@@ -12,7 +12,7 @@ const Footer = () => {
             <Link to='/' className='flex gap-3 items-center'>
               {/* <img src={Logo} alt="" className='w-32'/> */}
               <img src={Logo} alt="" className='invert w-12 h-12'/>
-              <h1 className=' text-3xl font-bold'>Logo</h1>
+              <h1 className=' text-3xl font-bold'>Blogify</h1>
             </Link>
             <p className='mt-2'>Sharing insights, tutorials, and ideas on web development and tech.</p>
             <p className='mt-2 text-sm'>123 Blog St, Style City, NY 10001</p>

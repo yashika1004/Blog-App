@@ -1,14 +1,14 @@
-import express from "express"
-import dotenv from "dotenv"
-import connectDB from "./database/db.js"
-import userRoute from "./routes/user.route.js"
-import blogRoute from "./routes/blog.route.js"
-import commentRoute from "./routes/comment.route.js"
-import cookieParser from 'cookie-parser';
-import cors from 'cors'
-import path from "path"
+import express from "express";
+import dotenv from "dotenv";
+import connectDB from "./database/db.js";
+import userRoute from "./routes/user.route.js";
+import blogRoute from "./routes/blog.route.js";
+import commentRoute from "./routes/comment.route.js";
+import cookieParser from "cookie-parser";
+import cors from "cors";
+import path from "path";
 
-dotenv.config()
+dotenv.config();
 const app = express()
 
 const PORT = process.env.PORT || 3000
@@ -19,8 +19,8 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(express.urlencoded({extended:true}));
 app.use(cors({
-    origin: ["https://frontend-chi-dun-64.vercel.app"],
-    credentials: true
+  origin: "https://frontend-wine-alpha-83.vercel.app",
+  credentials: true
 }));
 const _dirname = path.resolve()
 
