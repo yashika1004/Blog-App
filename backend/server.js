@@ -6,35 +6,29 @@ import blogRoute from "./routes/blog.route.js";
 import commentRoute from "./routes/comment.route.js";
 import cookieParser from "cookie-parser";
 import cors from "cors";
-import path from "path";
 
 dotenv.config();
-const app = express()
+const app = express();
 
-const PORT = process.env.PORT || 3000
+const PORT = process.env.PORT || 8000;
 
-
-// default middleware
+// middleware
 app.use(express.json());
 app.use(cookieParser());
-app.use(express.urlencoded({extended:true}));
+app.use(express.urlencoded({ extended: true }));
+
 app.use(cors({
   origin: "https://frontend-wine-alpha-83.vercel.app",
   credentials: true
 }));
-const _dirname = path.resolve()
 
-// apis
- app.use("/api/v1/user", userRoute)
- app.use("/api/v1/blog", blogRoute)
- app.use("/api/v1/comment", commentRoute)
+// routes
+app.use("/api/v1/user", userRoute);
+app.use("/api/v1/blog", blogRoute);
+app.use("/api/v1/comment", commentRoute);
 
- app.use(express.static(path.join(_dirname,"/frontend/dist")));
- app.get("*", (_, res)=>{
-    res.sendFile(path.resolve(_dirname, "frontend", "dist", "index.html"))
- });
-
-app.listen(PORT, ()=>{
-    console.log(`Server listen at port ${PORT}`);
-    connectDB()
-})
+// start server
+app.listen(PORT, () => {
+  console.log(`Server listen at port ${PORT}`);
+  connectDB();
+});
