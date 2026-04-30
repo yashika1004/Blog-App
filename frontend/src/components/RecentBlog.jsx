@@ -42,7 +42,7 @@ const RecentBlog = () => {
     useEffect(() => {
         const getAllPublsihedBlogs = async () => {
             try {
-                const res = await axios.get(`https://mern-blog-ha28.onrender.com/api/v1/blog/get-published-blogs`, { withCredentials: true })
+                const res = await axios.get(`http://localhost:8000/api/v1/blog/get-published-blogs`, { withCredentials: true })
                 if (res.data.success) {
                     dispatch(setBlog(res.data.blogs))
                 }
@@ -53,7 +53,9 @@ const RecentBlog = () => {
         }
         getAllPublsihedBlogs()
     }, [])
-
+    
+         const displayBlogs = blog?.slice(0, 4);
+         
     return (
         <div className='bg-gray-100 dark:bg-gray-800 pb-10'>
             <div className='max-w-6xl mx-auto  flex flex-col space-y-4 items-center'>

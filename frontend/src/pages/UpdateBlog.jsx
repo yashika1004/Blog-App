@@ -30,15 +30,18 @@ const UpdateBlog = () => {
     const dispatch = useDispatch()
     const { blog } = useSelector(store => store.blog)
     const selectBlog = blog.find(blog => blog._id === id)
-    const [content, setContent] = useState(selectBlog.description);
+    if (!selectBlog) {
+       return <div className='pt-20 md:ml-[320px] h-screen text-center text-xl font-bold'>Loading blog data...</div>;
+ }
+    const [content, setContent] = useState(selectBlog.description || '');
 
     const [blogData, setBlogData] = useState({
-        title: selectBlog?.title,
-        subtitle: selectBlog?.subtitle,
-        description: content,
-        category: selectBlog?.category,
+        title: selectBlog?.title || '',
+        subtitle: selectBlog?.subtitle || '',
+        description: content || '',
+        category: selectBlog?.category || '',
     });
-    const [previewThumbnail, setPreviewThumbnail] = useState(selectBlog?.thumbnail);
+    const [previewThumbnail, setPreviewThumbnail] = useState(selectBlog?.thumbnail || null);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -72,7 +75,7 @@ const UpdateBlog = () => {
         formData.append("file", blogData.thumbnail);
         try {
             setLoading(true)
-            const res = await axios.put(`https://mern-blog-ha28.onrender.com/api/v1/blog/${id}`, formData, {
+            const res = await axios.put(`http://localhost:8000/api/v1/blog/${id}`, formData, {
                 headers: {
                     "Content-Type": "multipart/form-data"
                 },
@@ -97,7 +100,7 @@ const UpdateBlog = () => {
         console.log("action", action);
 
         try {
-            const res = await axios.patch(`https://mern-blog-ha28.onrender.com/api/v1/blog/${id}`, {
+            const res = await axios.patch(`http://localhost:8000/api/v1/blog/${id}`, {
                 params: {
                     action
                 },
@@ -118,7 +121,7 @@ const UpdateBlog = () => {
 
     const deleteBlog = async () => {
         try {
-            const res = await axios.delete(`https://mern-blog-ha28.onrender.com/api/v1/blog/delete/${id}`, { withCredentials: true })
+            const res = await axios.delete(`http://localhost:8000/api/v1/blog/delete/${id}`, { withCredentials: true })
             if (res.data.success) {
                 const updatedBlogData = blog.filter((blogItem) => blogItem?._id !== id);
                 dispatch(setBlog(updatedBlogData))
