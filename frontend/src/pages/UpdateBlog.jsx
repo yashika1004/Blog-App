@@ -75,12 +75,16 @@ const UpdateBlog = () => {
         formData.append("file", blogData.thumbnail);
         try {
             setLoading(true)
-            const res = await axios.put(`http://localhost:8000/api/v1/blog/${id}`, formData, {
-                headers: {
-                    "Content-Type": "multipart/form-data"
-                },
-                withCredentials: true,
-            })
+            const res = await axios.put(
+  `https://blog-backend-6s9k.onrender.com/api/v1/blog/${id}`,
+  formData,
+  {
+    headers: {
+      "Content-Type": "multipart/form-data"
+    },
+    withCredentials: true,
+  }
+);
             if (res.data.success) {
                 toast.success(res.data.message)
                 // dispatch([...course, setCourse(res.data.course)])
@@ -100,12 +104,16 @@ const UpdateBlog = () => {
         console.log("action", action);
 
         try {
-            const res = await axios.patch(`http://localhost:8000/api/v1/blog/${id}`, {
-                params: {
-                    action
-                },
-                withCredentials: true
-            })
+            const res = await axios.patch(
+  `https://blog-backend-6s9k.onrender.com/api/v1/blog/${id}`,
+  null,
+  {
+    params: {
+      action
+    },
+    withCredentials: true
+  }
+);
             if (res.data.success) {
                 setPublish(!publish)
                 toast.success(res.data.message)
@@ -121,7 +129,10 @@ const UpdateBlog = () => {
 
     const deleteBlog = async () => {
         try {
-            const res = await axios.delete(`http://localhost:8000/api/v1/blog/delete/${id}`, { withCredentials: true })
+            const res = await axios.delete(
+  `https://blog-backend-6s9k.onrender.com/api/v1/blog/delete/${id}`,
+  { withCredentials: true }
+);
             if (res.data.success) {
                 const updatedBlogData = blog.filter((blogItem) => blogItem?._id !== id);
                 dispatch(setBlog(updatedBlogData))

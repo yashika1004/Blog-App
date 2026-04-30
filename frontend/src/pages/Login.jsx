@@ -32,12 +32,16 @@ const Login = () => {
     console.log(input);
 
     try {
-      const response = await axios.post(`http://localhost:8000/api/v1/user/login`, input, {
-        headers: {
-          "Content-Type": "application/json"
-        },
-        withCredentials: true
-      });
+      const response = await axios.post(
+  `https://blog-backend-6s9k.onrender.com/api/v1/user/login`,
+  input,
+  {
+    headers: {
+      "Content-Type": "application/json"
+    },
+    withCredentials: true
+  }
+);
       if (response.data.success) {
         navigate('/')
         dispatch(setUser(response.data.user))

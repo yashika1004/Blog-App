@@ -19,10 +19,9 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(express.urlencoded({extended:true}));
 app.use(cors({
-    origin: ["https://mern-blog-ha28.onrender.com", "http://localhost:5173"],
-    credentials:true
-}))
-
+    origin: ["https://frontend-chi-dun-64.vercel.app"],
+    credentials: true
+}));
 const _dirname = path.resolve()
 
 // apis

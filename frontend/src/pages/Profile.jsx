@@ -78,12 +78,16 @@ const Profile = () => {
 
         try {
             setLoading(true)
-            const res = await axios.put(`http://localhost:8000/api/v1/user/profile/update`, formData, {
-                headers: {
-                    "Content-Type": "multipart/form-data"
-                },
-                withCredentials: true,
-            })
+            const res = await axios.put(
+  `https://blog-backend-6s9k.onrender.com/api/v1/user/profile/update`,
+  formData,
+  {
+    headers: {
+      "Content-Type": "multipart/form-data"
+    },
+    withCredentials: true,
+  }
+);
             if (res.data.success) {
                 setOpen(false)
                 toast.success(res.data.message)

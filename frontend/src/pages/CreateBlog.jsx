@@ -25,12 +25,16 @@ const CreateBlog = () => {
         
         try {
             setLoading(true)
-            const res = await axios.post(`http://localhost:8000/api/v1/blog/`, { title, category }, {
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                withCredentials: true,
-            })
+            const res = await axios.post(
+  `https://blog-backend-6s9k.onrender.com/api/v1/blog/`,
+  { title, category },
+  {
+    headers: {
+      "Content-Type": "application/json",
+    },
+    withCredentials: true,
+  }
+);
             if (res.data.success) {
                 dispatch(setBlog([...blog, res.data.blog]))
                 navigate(`/dashboard/write-blog/${res.data.blog._id}`)

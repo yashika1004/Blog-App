@@ -32,12 +32,16 @@ const Signup = () => {
         console.log(user)
 
         try {
-            const response = await axios.post(`http://localhost:8000/api/v1/user/register`, user, {
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                withCredentials: true,
-            });
+            const response = await axios.post(
+  `https://blog-backend-6s9k.onrender.com/api/v1/user/register`,
+  user,
+  {
+    headers: {
+      "Content-Type": "application/json",
+    },
+    withCredentials: true,
+  }
+);
             if (response.data.success) {
                 navigate('/login')
                 toast.success(response.data.message)
