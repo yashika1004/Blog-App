@@ -29,8 +29,8 @@ const UpdateBlog = () => {
     const navigate = useNavigate()
     const dispatch = useDispatch()
     const { blog } = useSelector(store => store.blog)
-    const selectBlog = blog.find(blog => blog._id === id)
-    const [content, setContent] = useState(selectBlog.description);
+    const selectBlog = blog?.find(blog => blog._id === id)
+    const [content, setContent] = useState(selectBlog?.description);
 
     const [blogData, setBlogData] = useState({
         title: selectBlog?.title,
