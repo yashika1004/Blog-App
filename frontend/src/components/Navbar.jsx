@@ -6,28 +6,11 @@ import Logo from "../assets/logo.png"
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar'
 import { useDispatch, useSelector } from 'react-redux'
 import { toast } from 'sonner'
-import axios from 'axios'
+import api from "@/utils/api"
 import { setUser } from '@/redux/authSlice'
 import userLogo from "../assets/user.jpg"
 import { HiMenuAlt1, HiMenuAlt3 } from "react-icons/hi";
-import {
-    ChartColumnBig,
-    Cloud,
-    CreditCard,
-    Github,
-    Keyboard,
-    LifeBuoy,
-    LogOut,
-    Mail,
-    MessageSquare,
-    Plus,
-    PlusCircle,
-    Search,
-    Settings,
-    User,
-    UserPlus,
-    Users,
-} from "lucide-react"
+import { Search, LogOut, User, ChartColumnBig } from "lucide-react"
 
 import {
     DropdownMenu,
@@ -39,31 +22,22 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuGroup,
-    DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuSeparator,
-    DropdownMenuShortcut,
-    DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { FaEdit, FaMoon, FaRegEdit, FaSun } from 'react-icons/fa'
+import { FaMoon, FaSun, FaRegEdit } from 'react-icons/fa'
 import { toggleTheme } from '@/redux/themeSlice'
 import { LiaCommentSolid } from 'react-icons/lia'
 import ResponsiveMenu from './ResponsiveMenu'
+
 const Navbar = () => {
+
     const { user } = useSelector(store => store.auth)
     const { theme } = useSelector(store => store.theme)
-    const [searchTerm, setSearchTerm] = useState('');
+
+    const [searchTerm, setSearchTerm] = useState("")
     const [openNav, setOpenNav] = useState(false)
+
     const navigate = useNavigate()
     const dispatch = useDispatch()
-    // const user = false;
 
-
-    // 🔥 LOGOUT
     const logoutHandler = async () => {
         try {
             const res = await api.get("/api/v1/user/logout")
@@ -75,8 +49,7 @@ const Navbar = () => {
             }
         } catch (error) {
             console.log(error);
-            toast.error(error.response.data.message)
-
+            toast.error(error?.response?.data?.message)
         }
     }
 
@@ -91,98 +64,103 @@ const Navbar = () => {
     const toggleNav = ()=>{
         setOpenNav(!openNav)
     }
+
     return (
-        <div className='py-2 fixed w-full dark:bg-gray-800 dark:border-b-gray-600 border-b-gray-300 border-2 bg-white z-50'>
-            <div className='max-w-7xl mx-auto flex justify-between items-center px-4 md:px-0'>
-                {/* logo section */}
+        <div className='py-2 fixed w-full dark:bg-gray-800 border-b bg-white z-50'>
+            <div className='max-w-7xl mx-auto flex justify-between items-center px-4'>
+
+                {/* LOGO */}
                 <div className='flex gap-7 items-center'>
-                    <Link to={'/'}>
+                    <Link to='/'>
                         <div className='flex gap-2 items-center'>
-                            <img src={Logo} alt="" className='w-7 h-7 md:w-10 md:h-10 dark:invert' />
-                            <h1 className='font-bold text-3xl md:text-4xl'>Logo</h1>
+                            <img src={Logo} className='w-8 h-8' />
+                            <h1 className='font-bold text-2xl'>Blogify</h1>
                         </div>
                     </Link>
+
+                    {/* SEARCH */}
                     <div className='relative hidden md:block'>
-                        <Input type="text"
+                        <Input
+                            type="text"
                             placeholder="Search"
-                            className="border border-gray-700 dark:bg-gray-900 bg-gray-300 w-[300px] hidden md:block"
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
                         />
-                        <Button className='absolute right-0 top-0' onClick={handleSearch}><Search /></Button>
+                        <Button className='absolute right-0 top-0' onClick={handleSearch}>
+                            <Search size={16}/>
+                        </Button>
                     </div>
                 </div>
-                {/* nav section */}
-                <nav className='flex md:gap-7 gap-4 items-center'>
-                    <ul className='hidden md:flex gap-7 items-center text-xl font-semibold'>
-                        <NavLink to={'/'} className="cursor-pointer"><li>Home</li></NavLink>
-                        <NavLink to={'/blogs'} className={`cursor-pointer`}><li>Blogs</li></NavLink>
-                        <NavLink to={'/about'} className={`cursor-pointer`}><li>About</li></NavLink>
-                        {/* <NavLink to={'/write-blog'} className={`cursor-pointer`}><li>Write a Blog</li></NavLink> */}
-                    </ul>
-                    <div className='flex'>
-                        <Button onClick={() => dispatch(toggleTheme())} className="">
-                            {
-                                theme === 'light' ? <FaMoon /> : <FaSun />
-                            }
 
-                        </Button>
-                        {
-                            user ? <div className="ml-7 flex gap-3 items-center">
-                                {/* <Link to={'/profile'}> */}
-                                <DropdownMenu className="">
+                {/* NAV */}
+                <nav className='flex gap-4 items-center'>
+                    <ul className='hidden md:flex gap-6 font-semibold'>
+                        <NavLink to='/'><li>Home</li></NavLink>
+                        <NavLink to='/blogs'><li>Blogs</li></NavLink>
+                        <NavLink to='/about'><li>About</li></NavLink>
+                    </ul>
+
+                    <Button onClick={() => dispatch(toggleTheme())}>
+                        {theme === 'light' ? <FaMoon /> : <FaSun />}
+                    </Button>
+
+                    {
+                        user ? (
+                            <div className="flex gap-3 items-center">
+                                <DropdownMenu>
                                     <DropdownMenuTrigger asChild>
                                         <Avatar className="cursor-pointer">
                                             <AvatarImage src={user.photoUrl || userLogo} />
                                             <AvatarFallback>CN</AvatarFallback>
                                         </Avatar>
                                     </DropdownMenuTrigger>
-                                    <DropdownMenuContent className="w-56 dark:bg-gray-800">
+
+                                    <DropdownMenuContent>
                                         <DropdownMenuLabel>My Account</DropdownMenuLabel>
                                         <DropdownMenuSeparator />
+
                                         <DropdownMenuGroup>
                                             <DropdownMenuItem onClick={() => navigate('/dashboard/profile')}>
-                                                <User />
-                                                <span>Profile</span>
-                                                <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
+                                                <User /> Profile
                                             </DropdownMenuItem>
+
                                             <DropdownMenuItem onClick={() => navigate('/dashboard/your-blog')}>
-                                                <ChartColumnBig />
-                                                <span>Your Blog</span>
-                                                <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
+                                                <ChartColumnBig /> Your Blog
                                             </DropdownMenuItem>
+
                                             <DropdownMenuItem onClick={() => navigate('/dashboard/comments')}>
-                                                <LiaCommentSolid />
-                                                <span>Comments</span>
-                                                <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
+                                                <LiaCommentSolid /> Comments
                                             </DropdownMenuItem>
+
                                             <DropdownMenuItem onClick={() => navigate('/dashboard/write-blog')}>
-                                                <FaRegEdit />
-                                                <span>Write Blog</span>
-                                                <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
+                                                <FaRegEdit /> Write Blog
                                             </DropdownMenuItem>
                                         </DropdownMenuGroup>
+
                                         <DropdownMenuSeparator />
+
                                         <DropdownMenuItem onClick={logoutHandler}>
-                                            <LogOut />
-                                            <span>Log out</span>
-                                            <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
+                                            <LogOut /> Logout
                                         </DropdownMenuItem>
                                     </DropdownMenuContent>
                                 </DropdownMenu>
-                                {/* </Link> */}
-                                <Button className="hidden md:block" onClick={logoutHandler}>Logout</Button>
-                            </div> : <div className='ml-7 md:flex gap-2 '>
-                                <Link to={'/login'}><Button>Login</Button></Link>
-                                <Link className='hidden md:block' to={'/signup'}><Button>Signup</Button></Link>
+
+                                <Button onClick={logoutHandler}>Logout</Button>
                             </div>
-                        }
-                    </div>
-                    {
-                        openNav ? <HiMenuAlt3 onClick={toggleNav} className='w-7 h-7 md:hidden' /> : <HiMenuAlt1 onClick={toggleNav} className='w-7 h-7 md:hidden' />
+                        ) : (
+                            <div className='flex gap-2'>
+                                <Link to='/login'><Button>Login</Button></Link>
+                                <Link to='/signup'><Button>Signup</Button></Link>
+                            </div>
+                        )
                     }
 
+                    <div onClick={toggleNav} className='md:hidden'>
+                        {openNav ? <HiMenuAlt3 size={24}/> : <HiMenuAlt1 size={24}/>}
+                    </div>
+
                 </nav>
+
                 <ResponsiveMenu openNav={openNav} setOpenNav={setOpenNav} logoutHandler={logoutHandler}/>
             </div>
         </div>
