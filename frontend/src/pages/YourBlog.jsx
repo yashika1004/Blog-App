@@ -24,11 +24,58 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
 
+// const invoices = [
+//     {
+//         invoice: "INV001",
+//         paymentStatus: "Paid",
+//         totalAmount: "$250.00",
+//         paymentMethod: "Credit Card",
+//     },
+//     {
+//         invoice: "INV002",
+//         paymentStatus: "Pending",
+//         totalAmount: "$150.00",
+//         paymentMethod: "PayPal",
+//     },
+//     {
+//         invoice: "INV003",
+//         paymentStatus: "Unpaid",
+//         totalAmount: "$350.00",
+//         paymentMethod: "Bank Transfer",
+//     },
+//     {
+//         invoice: "INV004",
+//         paymentStatus: "Paid",
+//         totalAmount: "$450.00",
+//         paymentMethod: "Credit Card",
+//     },
+//     {
+//         invoice: "INV005",
+//         paymentStatus: "Paid",
+//         totalAmount: "$550.00",
+//         paymentMethod: "PayPal",
+//     },
+//     {
+//         invoice: "INV006",
+//         paymentStatus: "Pending",
+//         totalAmount: "$200.00",
+//         paymentMethod: "Bank Transfer",
+//     },
+//     {
+//         invoice: "INV007",
+//         paymentStatus: "Unpaid",
+//         totalAmount: "$300.00",
+//         paymentMethod: "Credit Card",
+//     },
+// ]
+
+
 const YourBlog = () => {
 
-  const navigate = useNavigate()
-  const dispatch = useDispatch()
-  const { blog } = useSelector(store => store.blog)
+    const navigate = useNavigate()
+    const dispatch = useDispatch()
+    const { blog } = useSelector(store => store.blog)
+    console.log(blog);
 
   // ✅ GET BLOGS
   const getOwnBlog = async () => {
@@ -50,96 +97,84 @@ const YourBlog = () => {
       const res = await api.delete(`/api/v1/blog/delete/${id}`)
 
       if (res.data.success) {
-        const updated = blog.filter(item => item._id !== id)
-        dispatch(setBlog(updated))
-        toast.success(res.data.message)
-      }
+                const updatedBlogData = blog.filter((blogItem) => blogItem?._id !== id);
+                dispatch(setBlog(updatedBlogData))
+                toast.success(res.data.message)
+            }
+            console.log(res.data.message);
 
-    } catch (error) {
-      console.log(error)
-      toast.error("Delete failed ❌")
+        } catch (error) {
+            console.log(error);
+            toast.error("something went error")
+        }
+
     }
-  }
+    useEffect(() => {
+        getOwnBlog()
+    }, [])
 
-  useEffect(() => {
-    getOwnBlog()
-  }, [])
+  const formatDate = (index) => {
+        const date = new Date(blog[index].createdAt)
+        const formattedDate = date.toLocaleDateString("en-GB");
+        return formattedDate
+        // console.log("formattedDate", date);
 
-  const formatDate = (date) => {
-    return new Date(date).toLocaleDateString("en-GB")
-  }
+    }
 
   return (
-    <div className='pt-20'>
-      <div className='max-w-6xl mx-auto mt-8'>
-        <Card className="p-5 space-y-2">
+        <div className='pb-10 pt-20 md:ml-[320px] h-screen'>
+            <div className='max-w-6xl mx-auto mt-8 '>
+                <Card className="w-full p-5 space-y-2 dark:bg-gray-800">
 
-          <Table>
-            <TableCaption>Your blogs</TableCaption>
+                    <Table>
+                        <TableCaption>A list of your recent blogs.</TableCaption>
+                        <TableHeader className="overflow-x-auto" >
+                            <TableRow>
+                                {/* <TableHead className="w-[100px]">Author</TableHead> */}
+                                <TableHead>Title</TableHead>
+                                <TableHead>Category</TableHead>
+                                <TableHead>Date</TableHead>
+                                <TableHead className="text-center">Action</TableHead>
+                            </TableRow>
+                        </TableHeader>
+                        <TableBody className="overflow-x-auto ">
+                            {blog?.map((item, index) => (
+                                <TableRow key={index}>
+                                    {/* <TableCell className="font-medium">{item.author.firstName}</TableCell> */}
+                                    <TableCell className="flex gap-4 items-center">
+                                        <img src={item.thumbnail} alt="" className='w-20 rounded-md hidden md:block' />
+                                        <h1 className='hover:underline cursor-pointer' onClick={() => navigate(`/blogs/${item._id}`)}>{item.title}</h1>
+                                    </TableCell>
+                                    <TableCell>{item.category}</TableCell>
+                                    <TableCell className="">{formatDate(index)}</TableCell>
+                                    <TableCell className="text-center">
+                                        {/* <Eye className='cursor-pointer' onClick={() => navigate(`/blogs/${item._id}`)} />
+                                        <Edit className='cursor-pointer' onClick={() => navigate(`/dashboard/write-blog/${item._id}`)} />
+                                        <Trash2 className='cursor-pointer' onClick={() => deleteBlog(item._id)} /> */}
+                                        
+                                        <DropdownMenu>
+                                            <DropdownMenuTrigger><BsThreeDotsVertical/></DropdownMenuTrigger>
+                                            <DropdownMenuContent className="w-[180px]">
+                                                <DropdownMenuItem onClick={() => navigate(`/dashboard/write-blog/${item._id}`)}><Edit />Edit</DropdownMenuItem>
+                                                <DropdownMenuItem className="text-red-500" onClick={() => deleteBlog(item._id)}><Trash2 />Delete</DropdownMenuItem>
+                                            </DropdownMenuContent>
+                                        </DropdownMenu>
+                                    </TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                        {/* <TableFooter>
+                            <TableRow>
+                                <TableCell colSpan={3}>Total</TableCell>
+                                <TableCell className="text-right">$2,500.00</TableCell>
+                            </TableRow>
+                        </TableFooter> */}
+                    </Table>
 
-            <TableHeader>
-              <TableRow>
-                <TableHead>Title</TableHead>
-                <TableHead>Category</TableHead>
-                <TableHead>Date</TableHead>
-                <TableHead className="text-center">Action</TableHead>
-              </TableRow>
-            </TableHeader>
-
-            <TableBody>
-              {blog?.map((item) => (
-                <TableRow key={item._id}>
-
-                  <TableCell className="flex gap-3 items-center">
-                    <img src={item.thumbnail} className='w-16 rounded' />
-                    <span
-                      className='cursor-pointer hover:underline'
-                      onClick={() => navigate(`/blogs/${item._id}`)}
-                    >
-                      {item.title}
-                    </span>
-                  </TableCell>
-
-                  <TableCell>{item.category}</TableCell>
-
-                  <TableCell>{formatDate(item.createdAt)}</TableCell>
-
-                  <TableCell className="text-center">
-                    <DropdownMenu>
-                      <DropdownMenuTrigger>
-                        <BsThreeDotsVertical />
-                      </DropdownMenuTrigger>
-
-                      <DropdownMenuContent>
-                        <DropdownMenuItem
-                          onClick={() =>
-                            navigate(`/dashboard/write-blog/${item._id}`)
-                          }
-                        >
-                          <Edit /> Edit
-                        </DropdownMenuItem>
-
-                        <DropdownMenuItem
-                          className="text-red-500"
-                          onClick={() => deleteBlog(item._id)}
-                        >
-                          <Trash2 /> Delete
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-
-                    </DropdownMenu>
-                  </TableCell>
-
-                </TableRow>
-              ))}
-            </TableBody>
-
-          </Table>
-
-        </Card>
-      </div>
-    </div>
-  )
+                </Card>
+            </div>
+        </div>
+    )
 }
 
 export default YourBlog

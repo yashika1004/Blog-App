@@ -4,54 +4,39 @@ import Comment from "../models/comment.model.js";
 
 export const createComment = async (req, res) => {
   try {
-    const postId = req.params.id;
-    const userId = req.id;
+    const postId = req.params.id
+    const commentKrneWalaUserKiId = req.id;
     const { content } = req.body;
 
-    if (!content || content.trim() === "") {
-      return res.status(400).json({
-        success: false,
-        message: "Comment content required"
-      });
-    }
-
     const blog = await Blog.findById(postId);
-    if (!blog) {
-      return res.status(404).json({
-        success: false,
-        message: "Blog not found"
-      });
-    }
+    if (!content) return res.status(400).json({ message: 'text is required', success: false });
 
     const comment = await Comment.create({
       content,
-      userId,
-      postId
-    });
+      userId: commentKrneWalaUserKiId,
+      postId: postId
+    })
 
     await comment.populate({
-      path: "userId",
-      select: "firstName lastName photoUrl"
-    });
+      path: 'userId',
+      select: 'firstName lastName photoUrl'
+    })
+
+
 
     blog.comments.push(comment._id);
-    await blog.save();
-
+    await blog.save()
     return res.status(201).json({
-      success: true,
-      message: "Comment Added",
-      comment
-    });
-
+      message: 'Comment Added',
+      comment,
+      success: true
+    })
   } catch (error) {
-    console.log("CREATE COMMENT ERROR:", error);
+    console.log(error);
 
-    return res.status(500).json({
-      success: false,
-      message: "Failed to add comment"
-    });
   }
 };
+
 export const getCommentsOfPost = async (req, res) => {
   try {
     const blogId = req.params.id;
