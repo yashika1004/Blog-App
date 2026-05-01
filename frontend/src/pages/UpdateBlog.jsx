@@ -182,8 +182,14 @@ const UpdateBlog = () => {
                     <SelectContent>
                         <SelectItem value="Web Development">Web</SelectItem>
                         <SelectItem value="Marketing">Marketing</SelectItem>
+                        <SelectItem value="Technology">Technology</SelectItem>
+                        <SelectItem value="Photography">Photography</SelectItem>
+                        <SelectItem value="Lifestyle">Lifestyle</SelectItem>
+                        <SelectItem value="Food">Food</SelectItem>
+                        <SelectItem value="Travel">Travel</SelectItem>
                     </SelectContent>
-                </Select>
+                    </Select>
+                
 
                 <Input type="file" onChange={selectThumbnail} />
 
