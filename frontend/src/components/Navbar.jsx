@@ -9,7 +9,8 @@ import api from "@/utils/api"
 import { setUser } from '@/redux/authSlice'
 import userLogo from "../assets/user.jpg"
 import { HiMenuAlt1, HiMenuAlt3 } from "react-icons/hi";
-
+import { Input } from "@/components/ui/input";
+import { Search } from "lucide-react";
 import {
     LogOut,
     User,
@@ -37,6 +38,7 @@ const Navbar = () => {
     const { theme } = useSelector(store => store.theme)
 
     const [openNav, setOpenNav] = useState(false)
+    const [searchTerm, setSearchTerm] = useState("")
 
     const navigate = useNavigate()
     const dispatch = useDispatch()
