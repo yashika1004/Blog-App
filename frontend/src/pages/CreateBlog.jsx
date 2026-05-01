@@ -13,7 +13,7 @@ import {
 } from '@/components/ui/select'
 
 import { setBlog } from '@/redux/blogSlice'
-import api from "@/utils/api"   // ✅ FIXED
+import api from "@/utils/api"
 import { Loader2 } from 'lucide-react'
 import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -39,68 +39,93 @@ const CreateBlog = () => {
         { title, category },
         {
           headers: {
-                    "Content-Type": "application/json",
-                },
+            "Content-Type": "application/json",
+          },
         }
-
       )
 
       if (res.data.success) {
-                dispatch(setBlog([...blog, res.data.blog]))
-                navigate(`/dashboard/write-blog/${res.data.blog._id}`)
-                toast.success(res.data.message)
-            } else {
-                toast.error("Something went wrong");
-            }
-        } catch (error) {
-            console.log(error)
-        } finally {
-            setLoading(false)
-        }
+        dispatch(setBlog([...blog, res.data.blog]))
+        navigate(`/dashboard/write-blog/${res.data.blog._id}`)
+        toast.success(res.data.message)
+      } else {
+        toast.error("Something went wrong")
+      }
 
+    } catch (error) {
+      console.log(error)
+      toast.error(error?.response?.data?.message || "Error creating blog")
+    } finally {
+      setLoading(false)
     }
+  }
 
   return (
-        <div className='p-4 md:pr-20 h-screen md:ml-[320px] pt-20'>
-            <Card className="md:p-10 p-4 dark:bg-gray-800">
-            <h1 className='text-2xl font-bold'>Lets create blog</h1>
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ex eius necessitatibus fugit vel distinctio architecto, ut ratione rem nobis eaque?</p>
-            <div className='mt-10 '>
-                <div>
-                    <Label>Title</Label>
-                    <Input type="text" placeholder="Your Blog Name" value={title} onChange={(e) => setTitle(e.target.value)} className="bg-white dark:bg-gray-700" />
-                </div>
-                <div className='mt-4 mb-5'>
-                    <Label>Category</Label>
-                    <Select onValueChange={getSelectedCategory}>
-                        <SelectTrigger className="w-[180px] bg-white dark:bg-gray-700">
-                            <SelectValue placeholder="Select a category" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectGroup>
-                                <SelectLabel>Category</SelectLabel>
-                                <SelectItem value="Web Development">Web Development</SelectItem>
-                                <SelectItem value="Digital Marketing">Digital Marketing</SelectItem>
-                                <SelectItem value="Blogging">Blogging</SelectItem>
-                                <SelectItem value="Photography">Photography</SelectItem>
-                                <SelectItem value="Cooking">Cooking</SelectItem>
-                            </SelectGroup>
-                        </SelectContent>
-                    </Select>
-                </div>
-                <div className='flex gap-2'>
-                    {/* <Button  variant="outline">Cancel</Button> */}
-                    <Button className="" disabled={loading} onClick={createBlogHandler}>
-                        {
-                            loading ? <><Loader2 className='mr-1 h-4 w-4 animate-spin' />Please wait</> : "Create"
-                        }
-                    </Button>
-                </div>
-            </div>
-            </Card>
-           
+    <div className='p-4 md:pr-20 h-screen md:ml-[320px] pt-20'>
+      <Card className="md:p-10 p-4 dark:bg-gray-800">
+
+        <h1 className='text-2xl font-bold'>Lets create blog</h1>
+        <p className='text-sm text-gray-500'>
+          Create a new blog by adding title and category
+        </p>
+
+        <div className='mt-10'>
+
+          {/* TITLE */}
+          <div>
+            <Label>Title</Label>
+            <Input
+              type="text"
+              placeholder="Your Blog Name"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              className="bg-white dark:bg-gray-700"
+            />
+          </div>
+
+          {/* CATEGORY */}
+          <div className='mt-4 mb-5'>
+            <Label>Category</Label>
+
+            {/* ✅ FIXED HERE */}
+            <Select onValueChange={(value) => setCategory(value)}>
+              <SelectTrigger className="w-[180px] bg-white dark:bg-gray-700">
+                <SelectValue placeholder="Select a category" />
+              </SelectTrigger>
+
+              <SelectContent>
+                <SelectGroup>
+                  <SelectLabel>Category</SelectLabel>
+                  <SelectItem value="Web Development">Web Development</SelectItem>
+                  <SelectItem value="Digital Marketing">Digital Marketing</SelectItem>
+                  <SelectItem value="Blogging">Blogging</SelectItem>
+                  <SelectItem value="Photography">Photography</SelectItem>
+                  <SelectItem value="Cooking">Cooking</SelectItem>
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* BUTTON */}
+          <div className='flex gap-2'>
+            <Button
+              disabled={loading}
+              onClick={createBlogHandler}
+              className="w-full"
+            >
+              {
+                loading
+                  ? <><Loader2 className='mr-1 h-4 w-4 animate-spin' />Please wait</>
+                  : "Create Blog"
+              }
+            </Button>
+          </div>
+
         </div>
-    )
+
+      </Card>
+    </div>
+  )
 }
 
 export default CreateBlog
