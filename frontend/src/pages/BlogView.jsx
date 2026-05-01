@@ -10,6 +10,14 @@ import api from "@/utils/api"   // ✅ FIXED
 import { FaHeart, FaRegHeart } from 'react-icons/fa6'
 import { setBlog } from '@/redux/blogSlice'
 import { toast } from 'sonner'
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
 
 const BlogView = () => {
 
