@@ -78,7 +78,7 @@ const Blog = () => {
 
             }
         }
-        getAllPublsihedBlogs()
+        getAllPublishedBlogs()
     },[])
 
     return (
