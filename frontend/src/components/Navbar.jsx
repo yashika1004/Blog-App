@@ -1,20 +1,32 @@
 import React, { useState } from 'react'
 import { Button } from './ui/button'
 import { Link, NavLink, useNavigate } from 'react-router-dom'
+import { Input } from './ui/input'
 import Logo from "../assets/logo.png"
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar'
 import { useDispatch, useSelector } from 'react-redux'
 import { toast } from 'sonner'
-import api from "@/utils/api"
+import axios from 'axios'
 import { setUser } from '@/redux/authSlice'
 import userLogo from "../assets/user.jpg"
 import { HiMenuAlt1, HiMenuAlt3 } from "react-icons/hi";
-import { Input } from "@/components/ui/input";
-import { Search } from "lucide-react";
 import {
+    ChartColumnBig,
+    Cloud,
+    CreditCard,
+    Github,
+    Keyboard,
+    LifeBuoy,
     LogOut,
+    Mail,
+    MessageSquare,
+    Plus,
+    PlusCircle,
+    Search,
+    Settings,
     User,
-    ChartColumnBig
+    UserPlus,
+    Users,
 } from "lucide-react"
 
 import {
@@ -27,21 +39,29 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 
-import { FaMoon, FaSun, FaRegEdit } from 'react-icons/fa'
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuGroup,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuShortcut,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { FaEdit, FaMoon, FaRegEdit, FaSun } from 'react-icons/fa'
 import { toggleTheme } from '@/redux/themeSlice'
 import { LiaCommentSolid } from 'react-icons/lia'
 import ResponsiveMenu from './ResponsiveMenu'
-
 const Navbar = () => {
-
     const { user } = useSelector(store => store.auth)
     const { theme } = useSelector(store => store.theme)
-
+    const [searchTerm, setSearchTerm] = useState('');
     const [openNav, setOpenNav] = useState(false)
-    const [searchTerm, setSearchTerm] = useState("")
-
     const navigate = useNavigate()
     const dispatch = useDispatch()
+    // const user = false;
+
 
     // 🔥 LOGOUT
     const logoutHandler = async () => {
@@ -71,7 +91,6 @@ const Navbar = () => {
     const toggleNav = ()=>{
         setOpenNav(!openNav)
     }
-
     return (
         <div className='py-2 fixed w-full dark:bg-gray-800 dark:border-b-gray-600 border-b-gray-300 border-2 bg-white z-50'>
             <div className='max-w-7xl mx-auto flex justify-between items-center px-4 md:px-0'>
